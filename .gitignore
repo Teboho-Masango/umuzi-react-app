@@ -5,11 +5,23 @@
 /.pnp
 .pnp.js
 
+# Python Virtual Environment & Cache (DO NOT COMMIT)
+backend/venv/
+venv/
+backend/__pycache__/
+__pycache__/
+*.pyc
+
+# Local SQLite Database
+backend/coffee.db
+*.db
+
 # testing
 /coverage
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store

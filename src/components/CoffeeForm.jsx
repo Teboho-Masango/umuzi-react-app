@@ -55,7 +55,7 @@ export default function CoffeeForm({ onAddBrew }) {
         onChange={(e) => setBrewMethod(e.target.value)}
         required
         style={{
-          color: brewMethod === "" ? "#757575" : "#0000",
+          color: brewMethod === "" ? "#757575" : "#000000",
         }}
       >
         <option value="" disabled hidden>
