@@ -9,7 +9,11 @@ export default function CoffeeForm({ onAddBrew }) {
 
   let handleSubmit = (e) => {
     e.preventDefault();
-    if (!beanName) return;
+
+    if (!beanName.trim() || !coffeeGrams || !waterGrams || !notes.trim()) {
+      alert("Field cannot be left blank");
+      return;
+    }
 
     let newBrew = {
       id: Date.now(),
@@ -22,7 +26,6 @@ export default function CoffeeForm({ onAddBrew }) {
 
     onAddBrew(newBrew);
 
-    // Reset form fields after submitting
     setBeanName("");
     setCoffeeGrams("");
     setWaterGrams("");
@@ -61,17 +64,20 @@ export default function CoffeeForm({ onAddBrew }) {
         placeholder="Coffee (grams)"
         value={coffeeGrams}
         onChange={(e) => setCoffeeGrams(e.target.value)}
+        required
       />
       <input
         type="number"
         placeholder="Water (grams)"
         value={waterGrams}
         onChange={(e) => setWaterGrams(e.target.value)}
+        required
       />
       <textarea
         placeholder="Tasting Notes..."
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
+        required
       />
       <button type="submit">Log It! </button>
     </form>
