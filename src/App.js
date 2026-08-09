@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import CoffeeForm from "./components/CoffeeForm";
 import CoffeeList from "./components/CoffeeList";
@@ -6,6 +6,10 @@ import "./App.css";
 
 export default function App() {
   let [brews, setBrews] = useState([]);
+
+  useEffect(() => {
+    document.title = `Brews: ${brews.length}`;
+  }, [brews]);
 
   let handleAddBrew = (newBrew) => {
     setBrews([newBrew, ...brews]);
