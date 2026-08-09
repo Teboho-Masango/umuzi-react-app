@@ -53,12 +53,29 @@ export default function CoffeeForm({ onAddBrew }) {
       <select
         value={brewMethod}
         onChange={(e) => setBrewMethod(e.target.value)}
+        required
+        style={{
+          color: brewMethod === "" ? "#757575" : "#0000",
+        }}
       >
-        <option value="V60">V60</option>
-        <option value="Aeropress">Aeropress</option>
-        <option value="French Press">French Press</option>
-        <option value="Espresso">Espresso</option>
-        <option value="Chemex">Chemex</option>
+        <option value="" disabled hidden>
+          Method
+        </option>
+        <option value="V60" style={{ color: "#000000" }}>
+          V60
+        </option>
+        <option value="Aeropress" style={{ color: "#000000" }}>
+          Aeropress
+        </option>
+        <option value="French Press" style={{ color: "#000000" }}>
+          French Press
+        </option>
+        <option value="Espresso" style={{ color: "#000000" }}>
+          Espresso
+        </option>
+        <option value="Chemex" style={{ color: "#000000" }}>
+          Chemex
+        </option>
       </select>
       <input
         type="number"
