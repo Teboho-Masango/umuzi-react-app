@@ -5,16 +5,7 @@ import CoffeeList from "./components/CoffeeList";
 import "./App.css";
 
 export default function App() {
-  let [brews, setBrews] = useState([
-    {
-      id: 1,
-      beanName: "Guatemala Huehuetenango",
-      brewMethod: "V60",
-      coffeeGrams: 18,
-      waterGrams: 300,
-      notes: "Rich and smooth blend.",
-    },
-  ]);
+  let [brews, setBrews] = useState([]);
 
   let handleAddBrew = (newBrew) => {
     setBrews([newBrew, ...brews]);
