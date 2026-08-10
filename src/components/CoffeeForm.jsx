@@ -1,14 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-export default function CoffeeForm({ onAddBrew }) {
-  let [beanName, setBeanName] = useState("");
-  let [brewMethod, setBrewMethod] = useState("");
-  let [coffeeGrams, setCoffeeGrams] = useState("");
-  let [waterGrams, setWaterGrams] = useState("");
-  let [notes, setNotes] = useState("");
-  let [rating, setRating] = useState("");
+export default function CoffeeForm({ onAddBrew, onUpdateBrew, editingBrew }) {
+  const [beanName, setBeanName] = useState("");
+  const [brewMethod, setBrewMethod] = useState("");
+  const [coffeeGrams, setCoffeeGrams] = useState("");
+  const [waterGrams, setWaterGrams] = useState("");
+  const [notes, setNotes] = useState("");
+  const [rating, setRating] = useState("");
 
-  let handleSubmit = (e) => {
+  useEffect(() => {
+    if (editingBrew) {
+      setBeanName(editingBrew.bean_name);
+      setBrewMethod(editingBrew.brew_method);
+      setCoffeeGrams(editingBrew.coffee_grams);
+      setWaterGrams(editingBrew.water_grams);
+      setNotes(editingBrew.notes);
+      setRating(editingBrew.rating.toString());
+    } else {
+      setBeanName("");
+      setBrewMethod("");
+      setCoffeeGrams("");
+      setWaterGrams("");
+      setNotes("");
+      setRating("");
+    }
+  }, [editingBrew]);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (
@@ -16,21 +34,28 @@ export default function CoffeeForm({ onAddBrew }) {
       !brewMethod ||
       !coffeeGrams ||
       !waterGrams ||
-      !notes.trim()
+      !notes.trim() ||
+      !rating
     ) {
       alert("Please fill out all required fields.");
       return;
     }
 
-    let newBrew = {
+    const brewData = {
       bean_name: beanName.trim(),
       brew_method: brewMethod,
       coffee_grams: Number(coffeeGrams),
       water_grams: Number(waterGrams),
       notes: notes.trim(),
+      rating: Number(rating),
     };
 
-    onAddBrew(newBrew);
+    if (editingBrew) {
+      brewData.id = editingBrew.id;
+      onUpdateBrew(brewData);
+    } else {
+      onAddBrew(brewData);
+    }
 
     setBeanName("");
     setBrewMethod("");
@@ -139,7 +164,7 @@ export default function CoffeeForm({ onAddBrew }) {
         required
       />
 
-      <button type="submit">Log It!</button>
+      <button type="submit">{editingBrew ? "Update Brew" : "Log It!"}</button>
     </form>
   );
 }

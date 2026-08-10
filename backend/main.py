@@ -2,10 +2,21 @@ from typing import List
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from dotenv import load_dotenv
+import os
 
 import database
 import models
 import schemas
+
+# Load environment variables from .env
+load_dotenv()
+
+# Override database engine to use env variable
+DATABASE_URL = os.getenv("DATABASE_URL")
+# Re-create engine with env variable
+import sqlalchemy
+database.engine = sqlalchemy.create_engine(DATABASE_URL)
 
 # Create database tables automatically
 models.Base.metadata.create_all(bind=database.engine)
@@ -36,7 +47,7 @@ def get_all_brews(db: Session = Depends(database.get_db)):
 @app.post("/brews", response_model=schemas.BrewResponse)
 def create_brew(brew: schemas.BrewCreate, db: Session = Depends(database.get_db)):
     # Convert BrewCreate schema to model
-    db_brew = models.Brew(**brew.model_dump())  # Ensure your schemas have model_dump() method
+    db_brew = models.Brew(**brew.model_dump())  # Assuming schema has model_dump()
     db.add(db_brew)
     db.commit()
     db.refresh(db_brew)

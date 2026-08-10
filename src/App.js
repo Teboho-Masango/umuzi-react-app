@@ -8,6 +8,7 @@ function App() {
   const [brews, setBrews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [editingBrew, setEditingBrew] = useState(null);
 
   useEffect(() => {
     fetchBrews();
@@ -40,9 +41,7 @@ function App() {
         },
         body: JSON.stringify(newBrewData),
       });
-
       if (!response.ok) throw new Error("Failed to save brew");
-
       const savedBrew = await response.json();
       setBrews((prevBrews) => [savedBrew, ...prevBrews]);
     } catch (err) {
@@ -56,14 +55,37 @@ function App() {
       const response = await fetch(`${API_URL}/${id}`, {
         method: "DELETE",
       });
-
       if (!response.ok) throw new Error("Failed to delete brew");
-
       setBrews((prevBrews) => prevBrews.filter((brew) => brew.id !== id));
     } catch (err) {
       console.error(err);
       alert("Error deleting brew from database!");
     }
+  };
+
+  const handleUpdateBrew = async (updatedBrew) => {
+    try {
+      const response = await fetch(`${API_URL}/${updatedBrew.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedBrew),
+      });
+      if (!response.ok) throw new Error("Failed to update brew");
+      const savedBrew = await response.json();
+      setBrews((prevBrews) =>
+        prevBrews.map((brew) => (brew.id === savedBrew.id ? savedBrew : brew)),
+      );
+      setEditingBrew(null); // clear editing state after update
+    } catch (err) {
+      console.error(err);
+      alert("Error updating brew!");
+    }
+  };
+
+  const handleEditClick = (brew) => {
+    setEditingBrew(brew);
   };
 
   return (
@@ -76,7 +98,7 @@ function App() {
       }}
     >
       <header style={{ textAlign: "center", marginBottom: "30px" }}>
-        <h1> Log It...My Brew!</h1>
+        <h1>Log It...My Brew!</h1>
         <p>Every brew has a story — tasting notes keep track of it.</p>
       </header>
 
@@ -95,12 +117,20 @@ function App() {
       )}
 
       <main style={{ display: "grid", gap: "30px" }}>
-        <CoffeeForm onAddBrew={handleAddBrew} />
+        <CoffeeForm
+          onAddBrew={handleAddBrew}
+          onUpdateBrew={handleUpdateBrew}
+          editingBrew={editingBrew}
+        />
 
         {loading ? (
           <p style={{ textAlign: "center" }}>Loading brews...</p>
         ) : (
-          <BrewList brews={brews} onDeleteBrew={handleDeleteBrew} />
+          <BrewList
+            brews={brews}
+            onDeleteBrew={handleDeleteBrew}
+            onEditClick={handleEditClick}
+          />
         )}
       </main>
     </div>
